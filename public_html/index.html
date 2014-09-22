@@ -44,7 +44,7 @@
               function seleccion(){
                 var e = document.getElementById("select-choice-a");
                 var strUser = e.options[e.selectedIndex].value;
-                if (strUser=='Estaciones Meteorológicas') {strUser=0;}
+                if (strUser==='Estaciones Meteorológicas') {strUser=0;}
                 document.getElementById('resultados').innerHTML ="<br />EMA:"+ema[strUser][0];
                 buscardatosHistoricos(ema[strUser][4]);
                 
