@@ -9,7 +9,11 @@ var viento;
 var lluvia;
 var fecha;
 var hora;
-
+var dia;
+var mes;
+var anio;
+var ho;
+var mi;
 
 
 
@@ -63,16 +67,38 @@ function buscardatosHistoricos(ema) {
     //http://anterior.inta.gov.ar/altovalle/met/downld02.txt
     //parserHistorico(llamar('http://anterior.inta.gov.ar/altovalle/met/downld02.txt'));
     parserHistorico(llamar(ema));
-    //alert(semaforo());
-    //alert('Temperatura='+temperatura+'\n Humedad='+humedad);
-    document.getElementById('main').style.display = 'block';
-    document.getElementById('main').innerHTML = 'Hora: '+hora+'<br>T: ' + temperatura +
-            'ºC <br/>H: ' + humedad + '%<br/>V: ' + viento + 'km/h<br/>pp: ' + lluvia + 'mm';
-    //color = semaforo();
-
-    //actualizar(color);
+    comparaFecha(dia,mes,anio,ho,mi);
+    
 
     return true;
+}
+
+function comparaFecha(dd,mm,aa,hh,min){
+    var fechaActual = new Date(); 
+    var diferencia=new Date();
+    aa=aa+2000;
+    mm=mm-1;
+    var fechaFin = new Date(aa,mm,dd,hh,min);
+   // var fechaFin = mm + "/" + dd + "/" + aa;
+    var diferencia= fechaActual.getTime() - fechaFin.getTime();
+    var difHoras = Math.floor(diferencia / (1000 * 60 * 60 )) 
+    var texto="FA:"+fechaActual+'\nFF:'+fechaFin+'\nDif:'+difHoras;
+    alert (texto);
+    if(difHoras<3){ 
+                  alert("paso >3");
+                  return true;                 
+         } else { alert("La EMA esta Fuera de Servicio");
+                 return false;}
+      }
+    
+
+
+function publicarDatosEMA(){
+        document.getElementById('datosMeteo').style.display = 'block';
+        document.getElementById('datosMeteo').innerHTML = 'Hora: '+hora+'<br>T: ' + temperatura +
+            'ºC <br/>H: ' + humedad + '%<br/>V: ' + viento + 'km/h<br/>pp: ' + lluvia + 'mm';
+
+    return true;  
 }
 
 
@@ -92,11 +118,6 @@ function parserHistoricolinea(filas, numero) {
     return ultima;
 }
 
-
-
-
-
-
 function parserHistorico(contenido) {
     filas = contenido.split('\n');
     //console.log(filas);
@@ -104,10 +125,15 @@ function parserHistorico(contenido) {
     if(filas.length<25){
         return true;
     }
-    numerofila = filas.length - 2
-    ultima = parserHistoricolinea(filas, numerofila)
+    numerofila = filas.length - 2;
+    ultima = parserHistoricolinea(filas, numerofila);
     fecha=ultima[0];
+    dia=parseInt(fecha.substr(0, 2),10);
+    mes=parseInt(fecha.substr(3, 2),10);
+    anio=parseInt(fecha.substr(6, 2),10);
     hora=ultima[1];
+    ho=parseInt(hora.substr(0, 2),10);
+    mi=parseInt(hora.substr(3, 2),10);
     temperatura = parseFloat(ultima[2]);
     humedad = parseFloat(ultima[5]);
     viento = parseFloat(ultima[10]);

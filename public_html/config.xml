@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.phonegap.CuentaGOTAS" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>PruebasGAP</name>
+    <name>Cuentagotas</name>
     <description>
-        Pruebas para phonegap
+        Primer prueba de acceso a el dato del archivo de la estacion.
     </description>
     <author email="cuentagotas@gmail.com" href="">
         Cuentagotas Team

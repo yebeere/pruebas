@@ -1,52 +1,195 @@
+
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Form Submission using Ajax</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
-    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
-    
-    <script>
-      // check comments field length
-      $("#main").live("pageinit", function(event) {
-        $("#commentform").submit(function() {
-          var len = $("#comments").val().length;
-          if ( len < 10 || len > 100 ) {
-            $("#errmsg").text("Invalid comments. Length must be between 10-100 chars").show().fadeOut(5000);
-            return false;
-          }
-          else 
-            return true;
-        });
-      });
-    </script>
-    
-  </head>
-  <body>
-    <!-- Main Page -->
-    <div id="main" data-role="page" data-theme="a">
-      <div data-role="header" data-theme="a">
-        <h1>Blog Comments</h1>
-      </div>
-      <div data-role="content">
-        <form id="commentform" action="postComment" method="post" data-transition="pop">
-          <div data-role="fieldcontain">
-            <label for="username">Name</label>
-            <input id="username" name="username" type="text" required placeholder="Enter Name" />
-          </div>
-          <div data-role="fieldcontain">
-            <label for="email">Email ID</label>
-            <input id="email" name="email" type="email" required placeholder="Enter Email" />
-          </div>
-          <div data-role="fieldcontain">
-            <label for="comments">Comments</label>
-            <textarea id="comments" name="comments" required placeholder="Enter Comments <10-100 chars long>"></textarea>
-          </div>
-          <div id="errmsg" style="color: #f00"></div>
-          <input id="submitid" type="submit" value="Submit Comment"/>
-        </form>
-      </div>
-    </div>
-  </body>
+    <head>
+        <meta charset="utf-8" />
+        
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <link rel="stylesheet" href="themes/Bootstrap.css">
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile.structure-1.4.0.min.css" />
+        <link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
+        <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
+        
+        <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+        <script src="js/semaforo.js" type="text/javascript"></script>
+        <script src="js/geo.js" type="text/javascript"></script>
+        <script type="text/javascript">
+                document.addEventListener("deviceready", onDeviceReady, false);
+                function onDeviceReady() {
+                   // Register the event listener
+                   document.addEventListener("offline", isOffline(), false);
+                   document.addEventListener("online", isOnline(), false);
+                   //navigator.geolocation.getCurrentPosition(onSuccessGPS, onErrorGPS);
+                    //buscardatosHistoricos();
+                  }
+                   // Handle the online event
+                   //
+               function isOffline() {
+                     //  alert ('Su dispositivo móvil esta fuera de línea');
+                       document.getElementById('net').className = 'estado no';
+                   }
+               function isOnline() {
+                   //    alert ('Su dispositivo móvil esta en línea');
+                       document.getElementById('net').className = 'estado ok';
+                       var options = {maximumAge: 0, timeout: 10000, enableHighAccuracy:true};
+                       navigator.geolocation.getCurrentPosition(onSuccessGPS, onErrorGPS, options);
+                      // buscardatosHistoricos();
+                   }
+               function resultado(){
+                   document.getElementById('resul').innerHTML = document.getElementById('esta').selectedIndex;
+               }    
+        </script>
+        <script>
+              function seleccion(){
+                var e = document.getElementById("select-choice-a");
+                var strUser = e.options[e.selectedIndex].value;
+                if (strUser=='Estaciones Meteorológicas') {strUser=0;}
+                document.getElementById('resultados').innerHTML ="<br />EMA:"+ema[strUser][0];
+                buscardatosHistoricos(ema[strUser][4]);
+            }
+        </script>
+        
+        <title>CuentaGOTAS</title>
+    </head>
+    <body>
+        <div id="app">
+            <div id="home-page" data-role="page" >
+                <div data-role="header">
+                        <h1>CuentaGOTAS</h1>
+                </div>
+
+                <div data-role="content" >
+                <table>
+                <tr>
+                  <th rowspan="4">
+                 
+                    <div id="logoContainer" class="centerText">
+                            <img src="images/logo.png" width="117" height="144" id="logo"  />
+                    </div>
+                    
+                    </th>
+                     <td>Conexiones </td>
+                     <tr>
+                    <td width="73" align="Left" valign="middle" bgcolor="#FFFFFF" >GPS:<td>
+                    <div id="gps"></div></td></tr>
+                    <tr><td width="73" align="left" valign="middle" bgcolor="#FFFFFF" >Red:<td>
+                       <div id="net"></div></td></tr>
+                  <!--  <tr>
+                    <td align="left" valign="top">Datos:</td> <td>                 
+                    <div id="main"></div>
+                    </td>
+                    </tr>  -->
+                   
+                    </table>
+                  <!--  <div id="estaciones">
+                    <label for="esta">Estaciones Meteorológicas</label>
+                    <select id="esta" data-native-menu="false" data-theme="f">
+                    </select>
+                    </div>
+                  -->
+                  <form id="formulario" data-transition="pop">
+                    <div class="ui-field-contain ui-body ui-br" data-role="fieldcontain">
+                            <label class="select ui-select" for="select-choice-a">Seleccione Estación:</label>
+                            <div class="ui-select">
+
+                            <select id="select-choice-a" data-native-menu="false" name="select-choice-a" tabindex="-1">
+                           <option>Estaciones Meteorológicas</option> 
+                       <!-- <option value="1">Estación 1</option> -->
+                            </select>
+                            </div>
+                    </div>
+                     <div class="ui-field-contain ui-body ui-br" data-role="fieldcontain">
+                            <label class="select ui-select" for="select-choice-a">Seleccione Cultivo:</label>
+                            <div class="ui-select">
+
+                            <select id="select-choice-b" data-native-menu="false" name="select-choice-b" tabindex="-1">
+                         <!--  <option>Estaciones Meteorológicas</option> -->
+                             <option value="1">Manzano</option>
+                             <option value="2">Peral</option>
+                             <option value="3">Frutas de Carozo</option>
+                            </select>
+                            </div>
+                    </div>
+                    <div class="ui-field-contain ui-body ui-br" data-role="fieldcontain">
+                            <label class="select ui-select" for="select-choice-a">Estado del Cultivo:</label>
+                            <div class="ui-select">
+
+                            <select id="select-choice-c" data-native-menu="false" name="select-choice-c" tabindex="-1">
+                         <!--  <option>Estaciones Meteorológicas</option> -->
+                             <option value="1">Comienzo de temporada</option>
+                             <option value="2">Mediados de temporada</option>
+                             <option value="3">Cerca de la cosecha</option>
+                             <option value="4">Después de la cosecha</option>
+                            </select>
+                            </div>
+                    </div>  
+                    <div class="ui-field-contain ui-body ui-br" data-role="fieldcontain">
+                            <label class="select ui-select" for="select-choice-a">Porcentaje de cobertura:</label>
+                            <div class="ui-select">
+
+                            <select id="select-choice-d" data-native-menu="false" name="select-choice-d" tabindex="-1">
+                         <!--  <option>Estaciones Meteorológicas</option> -->
+                             <option value="1">10 %</option>
+                             <option value="2">20 %</option>
+                             <option value="3">30 %</option>
+                             <option value="4">40 %</option>
+                             <option value="5">50 %</option>
+                             <option value="6">60 %</option>
+                             <option value="7">70 %</option>
+                             <option value="8">80 %</option>
+                             <option value="9">90 %</option>
+                             <option value="10">100 %</option>
+                            </select>
+                            </div>
+                    </div> 
+                    <div class="ui-field-contain ui-body ui-br" data-role="fieldcontain">
+                            <label class="select ui-select" for="select-choice-a">Eficiencia de aplicación:</label>
+                            <div class="ui-select">
+
+                            <select id="select-choice-e" data-native-menu="false" name="select-choice-e" tabindex="-1">
+                         <!--  <option>Estaciones Meteorológicas</option> -->
+                             <option value="1">Riego por goteo</option>
+                             <option value="2">Riego por Microaspersión</option>
+                            </select>
+                            </div>
+                    </div>                      <!--        <input id="submitid" type="submit" value="Calculadora de Riego" data-theme="f"/> -->
+                  </form>
+                    <div id="resul"></div>
+                    <div id="menu">
+                         <a data-icon="flat-checkround" data-theme="f" href="#second-page" data-role="button" onclick="seleccion()" >Calculadora de Riego</a>
+                   <!--     <a data-icon="flat-time" data-theme="f" href="#due-page"  data-role="button">Fake Btn</a>  -->
+                  <!--  <fieldset class="ui-grid-a">
+                            <div class="ui-block-a"> <a data-icon="flat-checkround" data-theme="e" href="#tips-page"  data-role="button">Fake Btn</a></div>
+                            <div class="ui-block-b"><a data-icon="ms-question" data-theme="g" href="#about-page"  data-role="button" >About</a></div>
+                        </fieldset>
+                  -->
+
+                    </div>
+              </div>
+             <div data-role="footer">
+                    <h4>pie de página</h4>
+                </div>   
+            </div><!-- /page  -->
+            <!-- /Segunda pagina  -->
+            <div data-role="page" id="second-page" data-title="This is the second page">
+                <div data-role="header">
+                    <h1>Second page</h1>
+                </div>
+                <div data-role="content" id="main">
+                    <p>Contenidode la segunda pagina</p>
+                    <p>Volver a la pagina inicial, <a href="#home-page">Vuelta</a>
+                    <div id="resultados"> Prueba </div>
+                    <div id="datosMeteo"> Prueba </div>
+                </div>
+                <div data-role="footer">
+                    <h4>pie de segunda pagina</h4>
+                </div>
+                </div>
+
+           
+        </div>
+
+ 
+    </body>
 </html>
