@@ -92,9 +92,9 @@ function ordenGPS(position){
 
   var onSuccessGPS = function(position) {
                //   var distancia=distance(ema[1][1],ema[1][2],position.coords.latitude,position.coords.longitude)
-//                    alert('Latitude: ' + position.coords.latitude + '\n' +
-//                    'Longitude: ' + position.coords.longitude + '\n'+
-//                    'Distancia: '+distancia+' km \n') ;
+                    alert('Latitude: ' + position.coords.latitude + '\n' +
+                    'Longitude: ' + position.coords.longitude + '\n'+
+                    'Distancia: '+distancia+' km \n') ;
                     document.getElementById('gps').className = 'estado ok';
                     for (var i = 0; i < 7; i++) {
                         // ema[i][5] = distance(ema[i][1],ema[i][2],-38.57,-68.36);
@@ -129,14 +129,14 @@ function ordenGPS(position){
             // onError Callback receives a PositionError object
             //
     function onErrorGPS(error) {
-//                        alert('code: ' + error.code + '\n' +
-//                        'message: ' + error.message + '\n');
+                        alert('code: ' + error.code + '\n' +
+                        'message: ' + error.message + '\n');
                          document.getElementById('gps').className = 'estado no';
                          //document.getElementById('estaciones').innerHTML = ema;
 
                      for (var i = 0; i < 7; i++) { 
                        var j=i;
-                      $("<option value='"+j+"'>"+ema[i][0]+"(Dist:"+Math.round(ema[i][5]) +" km) </option>").appendTo("#select-choice-a");
+                      $("<option value='"+j+"'>"+ema[i][0]+"</option>").appendTo("#select-choice-a");
                       var myselect = $("#select-choice-a");
                       myselect.selectmenu('refresh');
                     }

@@ -43,12 +43,33 @@
         <script>
               function seleccion(){
                 var e = document.getElementById("select-choice-a");
-                var strUser = e.options[e.selectedIndex].value;
-                if (strUser==='Estaciones Meteorológicas') {strUser=0;}
-                document.getElementById('resultados').innerHTML ="<br />EMA:"+ema[strUser][0];
-                buscardatosHistoricos(ema[strUser][4]);
+                var emaSeleccionada = e.options[e.selectedIndex].value;
+                var tipoCultivo=getRadioValue('frutal');
+                var tipoRiego=getRadioValue('tipoRiego');
+                var epoca = document.getElementById("epoca").options[document.getElementById("epoca").selectedIndex].value;
+                var PC=document.getElementById("cobertura").value;
+                
+                if (emaSeleccionada==='Estaciones Meteorológicas') {emaSeleccionada=0;}
+                document.getElementById('resultados').innerHTML ="<br />EMA:"+ema[emaSeleccionada][0]+"<br />tipoCultivo:"+tipoCultivo+
+                       "<br />tipoRiego:"+tipoRiego+"<br />epoca:"+epoca +"<br />PC:"+PC  ;
+                buscardatosHistoricos(ema[emaSeleccionada][4]);
                 
             }
+            function getRadioValue(groupName) {
+                var _result;
+                try {
+                    var o_radio_group = document.getElementsByName(groupName);
+                    for (var a = 0; a < o_radio_group.length; a++) {
+                        if (o_radio_group[a].checked) {
+                            _result = o_radio_group[a].value;
+                            break;
+                        }
+                    }
+                } catch (e) { }
+                return _result;
+            }
+            
+            
         </script>
         
         <title>CuentaGOTAS</title>
@@ -94,33 +115,33 @@
                     <div data-role="fieldcontain">
                         <fieldset data-role="controlgroup" data-type="horizontal">
                                     <legend>Tipo de Cultivo:</legend>
-                                    <input type="radio" name="radio-choice-b" id="radio-choice-c" value="on" checked="checked" />
+                                    <input type="radio" name="frutal" id="radio-choice-c" value="0" checked="checked" />
                                     <label for="radio-choice-c">Manzano</label>
-                                    <input type="radio" name="radio-choice-b" id="radio-choice-d" value="off" />
+                                    <input type="radio" name="frutal" id="radio-choice-d" value="1" />
                                     <label for="radio-choice-d">Peral</label>
-                                    <input type="radio" name="radio-choice-b" id="radio-choice-b" value="other" />
+                                    <input type="radio" name="frutal" id="radio-choice-b" value="2" />
                                     <label for="radio-choice-b">Frutas de Carozo</label>
                         </fieldset>
                     </div> 
                       
                       
                     <div class="ui-field-contain ui-body ui-br" data-role="fieldcontain">
-                            <label class="select ui-select" for="select-choice-a">Estado del Cultivo:</label>
+                            <label class="select ui-select" for="epoca">Estado del Cultivo:</label>
                             <div class="ui-select">
 
-                            <select id="select-choice-c" data-native-menu="false" name="select-choice-c" tabindex="-1">
+                            <select id="epoca" data-native-menu="false" name="epoca" tabindex="-1">
                          <!--  <option>Estaciones Meteorológicas</option> -->
-                             <option value="1">Comienzo de temporada</option>
-                             <option value="2">Mediados de temporada</option>
-                             <option value="3">Cerca de la cosecha</option>
-                             <option value="4">Después de la cosecha</option>
+                             <option value="0">Comienzo de temporada</option>
+                             <option value="1">Mediados de temporada</option>
+                             <option value="2">Cerca de la cosecha</option>
+                             <option value="3">Después de la cosecha</option>
                             </select>
                             </div>
                     </div>  
                       
                     <div data-role="fieldcontain">
-                            <label for="slider">Porcentaje de cobertura:</label>
-                            <input type="range" name="slider" id="slider" value="50" min="0" max="100" step=10 data-highlight="true"  />
+                            <label for="cobertura">Porcentaje de cobertura:</label>
+                            <input type="range" name="cobertura" id="cobertura" value="50" min="0" max="100" step=10 data-highlight="true"  />
                     </div>
                     
  
@@ -129,10 +150,10 @@
                         <fieldset data-role="controlgroup" data-type="horizontal">
                                     <legend>Tipo de Riego:</legend>
 
-                                    <input type="radio" name="radio-choice-e" id="radio-choice-e" value="on" checked="checked" />
-                                    <label for="radio-choice-e">Riego por goteo</label>
-                                    <input type="radio" name="radio-choice-e" id="radio-choice-f" value="off" />
-                                    <label for="radio-choice-f">Riego por Microaspersión</label>                                    
+                                    <input type="radio" name="tipoRiego" id="goteo" value="0.9" checked="checked" />
+                                    <label for="goteo">Riego por goteo</label>
+                                    <input type="radio" name="tipoRiego" id="micro" value="0.8" />
+                                    <label for="micro">Riego por Microaspersión</label>                                    
                         </fieldset>
                     </div>   
                       
@@ -140,7 +161,7 @@
                   </form>
                     <div id="resul"></div>
                     <div id="menu">
-                         <a data-icon="flat-checkround" data-theme="f" href="#second-page" data-role="button" onclick="seleccion()" >Calculadora de Riego</a>
+                         <a data-icon="flat-checkround" data-theme="b" href="#second-page" data-role="button" onclick="seleccion()" >Calculadora de Riego</a>
                    <!--     <a data-icon="flat-time" data-theme="f" href="#due-page"  data-role="button">Fake Btn</a>  -->
                   <!--  <fieldset class="ui-grid-a">
                             <div class="ui-block-a"> <a data-icon="flat-checkround" data-theme="e" href="#tips-page"  data-role="button">Fake Btn</a></div>
@@ -162,8 +183,8 @@
                 <div data-role="content" id="main">
                     <p>Contenidode la segunda pagina</p>
                     <p>Volver a la pagina inicial, <a href="#home-page">Vuelta</a>
-                    <div id="resultados"> Prueba </div>
-                    <div id="datosMeteo"> Prueba </div>
+                    <div id="resultados">  </div>
+                    <div id="datosMeteo">  </div>
                 </div>
                 <div data-role="footer">
                     <h4>pie de segunda pagina</h4>
@@ -185,7 +206,9 @@
             </div>
            
         </div>
-
+        <script type="text/javascript">
+            app.initialize();
+        </script>
  
     </body>
 </html>

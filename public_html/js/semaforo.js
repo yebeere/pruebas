@@ -67,7 +67,12 @@ function buscardatosHistoricos(ema) {
     //http://anterior.inta.gov.ar/altovalle/met/downld02.txt
     //parserHistorico(llamar('http://anterior.inta.gov.ar/altovalle/met/downld02.txt'));
     parserHistorico(llamar(ema));
-    comparaFecha(dia,mes,anio,ho,mi);
+    if (comparaFecha(dia,mes,anio,ho,mi)){
+        publicarDatosEMA();
+    }
+     else {
+         alert("La EMA esta Fuera de Servicio");
+     };
     
 
     return true;
@@ -85,9 +90,9 @@ function comparaFecha(dd,mm,aa,hh,min){
     var texto="FA:"+fechaActual+'\nFF:'+fechaFin+'\nDif:'+difHoras;
     alert (texto);
     if(difHoras<3){ 
-                  alert("paso >3");
+//                  alert("paso >3");
                   return true;                 
-         } else { alert("La EMA esta Fuera de Servicio");
+         } else { //alert("La EMA esta Fuera de Servicio");
                  return false;}
       }
     
